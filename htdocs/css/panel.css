@@ -55,6 +55,7 @@ Author: Evan McIlroy <evanmcilroy@gmail.com>*/
 	margin-right: 0px;
 	border: 0px;
 	border-radius: 0px;
+    cursor: pointer;
 }
 
 .panel-heading a:after {
