@@ -803,7 +803,7 @@ var VisitCell = function (_React$Component7) {
                                 null,
                                 visit.ddeInstCompleted,
                                 "/",
-                                visit.totalInstrs,
+                                visit.totalDDEInstrs,
                                 " instruments entered"
                             )
                         ));
