@@ -208,6 +208,7 @@ var SideBarCandInstContent = function (_React$Component3) {
                     var inst = data[sg][t];
                     var url = loris.BaseURL + "/" + inst.testName + "/?commentID=" + inst.commentID + "&sessionID=" + sessionID + "&candID=" + candid;
                     var flagCompletion = [];
+
                     if (inst.ddeCompletion === "Complete") {
                         flagCompletion.push(React.createElement("span", { className: "complete left-align glyphicon glyphicon-check" }), React.createElement("span", { className: "complete left-align glyphicon glyphicon-check" }));
                     } else if (inst.completion === "Complete") {

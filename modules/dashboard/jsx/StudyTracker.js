@@ -130,6 +130,7 @@ class SideBarCandInstContent extends React.Component {
                     "&sessionID=" + sessionID +
                     "&candID=" + candid;
                 let flagCompletion = [];
+                 
                 if (inst.ddeCompletion === "Complete") {
                     flagCompletion.push(
                         <span className="complete left-align glyphicon glyphicon-check"/>,

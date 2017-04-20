@@ -501,9 +501,24 @@ function getInstruments($sessionID) {
                  WHERE Test_name=:t",
                 array("t" => $t["Test_name"])
         );
+        $hasDDE = !empty($DB->pselectOne(
+            "SELECT *
+             FROM Config
+             WHERE Value=:t
+             AND ConfigID=(
+                 SELECT ID
+                 FROM ConfigSettings
+                 WHERE Name=:dde
+             )",
+            array(
+                "t" => $t["Test_name"],
+                "dde" => "DoubleDataEntryInstruments"
+            )
+        )) ? true : false;
+
         $ddeComplete = null;
         $conflicts = false;
-        if ($t["Data_entry"] === "Complete") {
+        if ($t["Data_entry"] === "Complete" && $hasDDE) {
             $ddeComplete = $DB->pselectOne(
                 "SELECT Data_entry 
                  FROM flag 
@@ -527,6 +542,7 @@ function getInstruments($sessionID) {
             "fullName" => $fullName,
             "testName" => $t["Test_name"],
             "completion" => $t["Data_entry"],
+            "hasDDE" => $hasDDE,
             "ddeCompletion" => $ddeComplete,
             "commentID" => $t["CommentID"],
             "conflicts" => $conflicts
