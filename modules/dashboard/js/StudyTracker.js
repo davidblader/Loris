@@ -207,34 +207,13 @@ var SideBarCandInstContent = function (_React$Component3) {
                 var _loop = function _loop(t) {
                     var inst = data[sg][t];
                     var url = loris.BaseURL + "/" + inst.testName + "/?commentID=" + inst.commentID + "&sessionID=" + sessionID + "&candID=" + candid;
-                    var flagCompletion = void 0;
+                    var flagCompletion = [];
                     if (inst.ddeCompletion === "Complete") {
-                        flagCompletion = React.createElement(
-                            "span",
-                            {
-                                className: "complete left-align",
-                                style: bold
-                            },
-                            "\u2713\u2713"
-                        );
+                        flagCompletion.push(React.createElement("span", { className: "complete left-align glyphicon glyphicon-check" }), React.createElement("span", { className: "complete left-align glyphicon glyphicon-check" }));
                     } else if (inst.completion === "Complete") {
-                        flagCompletion = React.createElement(
-                            "span",
-                            {
-                                className: "complete left-align",
-                                style: bold
-                            },
-                            "\xA0 \u2713"
-                        );
+                        flagCompletion.push(React.createElement("span", { className: "deadline-past left-align glyphicon glyphicon-unchecked" }), React.createElement("span", { className: "complete left-align glyphicon glyphicon-check" }));
                     } else {
-                        flagCompletion = React.createElement(
-                            "span",
-                            {
-                                className: "deadline-past left-align",
-                                style: bold
-                            },
-                            "! \xA0"
-                        );
+                        flagCompletion.push(React.createElement("span", { className: "deadline-past left-align glyphicon glyphicon-unchecked" }), React.createElement("span", { className: "deadline-past left-align glyphicon glyphicon-unchecked" }));
                     }
                     var conflicts = [];
                     if (inst.conflicts) {
@@ -252,7 +231,7 @@ var SideBarCandInstContent = function (_React$Component3) {
                     }
                     content.push(React.createElement(
                         "div",
-                        null,
+                        { style: { borderTop: "2px solid #ddd" } },
                         React.createElement(
                             "a",
                             { href: url, target: "_blank", className: "left-indent", style: style },
@@ -390,7 +369,7 @@ var SideBarCandContent = function (_React$Component4) {
                             textOverflow: "ellipsis",
                             overflow: "hidden",
                             display: "block",
-                            margin: "5px"
+                            margin: "5px, 20px"
                         };
 
                         var _loop2 = function _loop2(f) {
@@ -400,7 +379,8 @@ var SideBarCandContent = function (_React$Component4) {
                             var fb = feedback.instruments[f];
                             instrumentFeedback.push(React.createElement(
                                 "a",
-                                { href: "#",
+                                { className: "left-indent",
+                                    href: "#",
                                     onClick: function onClick() {
                                         return openBVLFeedback(candid, v.sessionID, fb.commentID, fb.testName);
                                     },
@@ -418,7 +398,6 @@ var SideBarCandContent = function (_React$Component4) {
                         }
                     }
                     if (vr.status === "complete" && de.status === "complete") {
-
                         visitContent.push(React.createElement(
                             "div",
                             null,
@@ -428,7 +407,6 @@ var SideBarCandContent = function (_React$Component4) {
                             instrumentFeedback
                         ));
                     } else if (de.html) {
-                        url += "instrument_list/?candID=" + candid + "&sessionID=" + v.sessionID;
                         visitContent.push(React.createElement(
                             "div",
                             null,
@@ -445,7 +423,8 @@ var SideBarCandContent = function (_React$Component4) {
                                 { className: "left-indent" },
                                 "Data Entry: ",
                                 de.html
-                            )
+                            ),
+                            instrumentFeedback
                         ));
                     } else {
                         url += candid;

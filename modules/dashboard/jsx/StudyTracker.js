@@ -129,28 +129,22 @@ class SideBarCandInstContent extends React.Component {
                     "/?commentID="+ inst.commentID +
                     "&sessionID=" + sessionID +
                     "&candID=" + candid;
-                let flagCompletion;
+                let flagCompletion = [];
                 if (inst.ddeCompletion === "Complete") {
-                    flagCompletion = <span
-                        className="complete left-align"
-                        style={bold}
-                    >
-                        &#10003;&#10003;
-                    </span>
+                    flagCompletion.push(
+                        <span className="complete left-align glyphicon glyphicon-check"/>,
+                        <span className="complete left-align glyphicon glyphicon-check"/>
+                    );
                 } else if (inst.completion === "Complete") {
-                    flagCompletion = <span
-                        className="complete left-align"
-                        style={bold}
-                    >
-                        &nbsp; &#10003;
-                    </span>
+                    flagCompletion.push(
+                        <span className="deadline-past left-align glyphicon glyphicon-unchecked"/>,
+                        <span className="complete left-align glyphicon glyphicon-check"/>
+                    );
                 } else {
-                    flagCompletion = <span
-                        className="deadline-past left-align"
-                        style={bold}
-                    >
-                        ! &nbsp;
-                    </span>
+                    flagCompletion.push(
+                        <span className="deadline-past left-align glyphicon glyphicon-unchecked"/>,
+                        <span className="deadline-past left-align glyphicon glyphicon-unchecked"/>
+                    );
                 }
                 let conflicts = [];
                 if (inst.conflicts) {
@@ -165,7 +159,7 @@ class SideBarCandInstContent extends React.Component {
                     );
                 }
                 content.push(
-                    <div>
+                    <div style={{borderTop: "2px solid #ddd"}}>
                         <a href={url} target="_blank" className="left-indent" style={style}>
                             {flagCompletion}
                             {inst.fullName}
@@ -276,7 +270,7 @@ class SideBarCandContent extends React.Component {
                                 textOverflow: "ellipsis",
                                 overflow: "hidden",
                                 display: "block",
-                                margin: "5px"
+                                margin: "5px, 20px"
                             };
                         for (let f in feedback.instruments) {
                             if (!feedback.instruments[f].commentID) {
@@ -284,7 +278,8 @@ class SideBarCandContent extends React.Component {
                             }
                             let fb = feedback.instruments[f];
                             instrumentFeedback.push(
-                                <a href="#"
+                                <a className="left-indent"
+                                   href="#"
                                    onClick={() => openBVLFeedback(candid, v.sessionID, fb.commentID, fb.testName)}
                                    style={instLinkStyle}
                                 >
@@ -295,7 +290,6 @@ class SideBarCandContent extends React.Component {
                         }
                     }
                     if (vr.status === "complete" && de.status === "complete") {
-
                         visitContent.push(
                             <div>
                                 &nbsp;
@@ -305,13 +299,13 @@ class SideBarCandContent extends React.Component {
                             </div>
                         );
                     } else if(de.html){
-                        url += "instrument_list/?candID="+candid+"&sessionID="+v.sessionID;
                         visitContent.push(
                             <div>
                                 &nbsp;
                                 {visitLink}
                                 <p className="left-indent">Visit Registration: {vr.html}</p>
                                 <p className="left-indent">Data Entry: {de.html}</p>
+                                {instrumentFeedback}
                             </div>
                         );
                     } else {
