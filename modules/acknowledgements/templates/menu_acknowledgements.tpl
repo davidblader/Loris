@@ -24,14 +24,6 @@
                         {$form.citation_name.html}
                     </div>
                 </div>
-                <div class="form-group col-sm-4">
-                    <label class="col-sm-12 col-md-4">
-                        {$form.title.label}
-                    </label>
-                    <div class="col-sm-12 col-md-8">
-                        {$form.title.html}
-                    </div>
-                </div>
             </div>
             <div class="row">
                 <div class="form-group col-sm-4">
@@ -85,7 +77,7 @@
 <div id="tabs" style="background: white">
     <div class="tab-content">
         <div class="tab-pane active">
-            <table class="table table-hover table-primary table-bordered table-unresolved-conflicts dynamictable" border="0">
+            <table class="table table-hover table-primary table-bordered table-acknowledgements dynamictable" border="0">
                 <thead>
                     <tr class="info">
                         <th>Citation Policy</th>
@@ -134,9 +126,6 @@
                                 </td>
                                 <td nowrap="nowrap">
                                     <div class="col-sm-12 col-md-12">{$form.addcitation_name.html}</div>
-                                </td>
-                                <td nowrap="nowrap">
-                                    <div class="col-sm-12 col-md-12">{$form.addtitle.html}</div>
                                 </td>
                                 <td nowrap="nowrap">
                                     <div class="col-sm-12 col-md-12">
@@ -190,7 +179,7 @@
                             </tr>
 
                             <tr>
-                                <td nowrap="nowrap" colspan="9" id="message-area">
+                                <td nowrap="nowrap" colspan="8" id="message-area">
                                     
                                 </td>
                                 <td nowrap="nowrap">
@@ -198,39 +187,20 @@
                                     <input class="btn btn-sm btn-primary" value="Reset" type="reset" />
                                 </td>
                             </tr>
-                            {section name=item loop=$items}
-                            <tr>
-                                {section name=piece loop=$items[item]}
-                                    {if $items[item][piece].name != ""}
-                                        <td>
-                                            {if $items[item][piece].value == "bachelors"}
-                                                Bachelors
-                                            {elseif $items[item][piece].value == "masters"}
-                                                Masters
-                                            {elseif $items[item][piece].value == "phd"}
-                                                PhD
-                                            {elseif $items[item][piece].value == "postdoc"}
-                                                Postdoctoral
-                                            {elseif $items[item][piece].value == "md"}
-                                                MD
-                                            {elseif $items[item][piece].value == "registered_nurse"}
-                                                Registered Nurse
-                                            {else}
-                                                {$items[item][piece].value}
-                                            {/if}
-                                        </td>
-                                    {/if}
-                                {/section}
-                            </tr>
-                            {sectionelse}
-                                <tr>
-                                    <tr><td colspan="10">You're not alone.</td></tr>
-                                </tr>
-                            {/section}
                         </tbody>
                     </table>
                 </form>
             </div>
         </div>
+         <br>
+         <div id="datatable" />
     </div>
 </div>
+<script>
+var table = RDynamicDataTable({
+    "DataURL" : "{$baseurl}/acknowledgements/?format=json",
+    "getFormattedCell" : formatAcknowledgementsColumn
+
+});
+ReactDOM.render(table, document.getElementById("datatable"));
+</script>

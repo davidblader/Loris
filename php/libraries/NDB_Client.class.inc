@@ -87,9 +87,23 @@ class NDB_Client
 
         // stop here if this is a command line client
         if (!$this->_isWebClient) {
+            // Set user as unix username.
+            // Requires Loris to have user with this username
+            $user =& User::singleton(getenv('USER'));
             return true;
         }
 
+        $config_additions = $DB->pselectOne(
+            "
+		SELECT c.Value
+		FROM Config c
+			JOIN ConfigSettings cs ON (c.ConfigID=cs.ID)
+		WHERE cs.Name=:nm",
+            array("nm" => "CSPAdditionalHeaders")
+        );
+        if (empty($config_additions)) {
+            $config_additions = "";
+        }
         // Content-Security policy for LORIS
         // 1. By default, only allow things that are self-hosted
         // 2. Allow inline CSS and JS (inline JS is required for
@@ -104,7 +118,8 @@ class NDB_Client
             . "default-src 'self' 'unsafe-inline'; "
             . "script-src 'self' 'unsafe-inline' 'unsafe-eval'; "
             . "font-src 'self' data:; "
-            . "img-src 'self' data:"
+            . "img-src 'self' data:; "
+            . $config_additions
         );
         // start php session
         session_start();
@@ -152,7 +167,7 @@ class NDB_Client
             // Check to see if passwordExpired flag is set
             if (!$login->passwordExpired()) {
                 // If not show login page
-                $login->showLoginScreen();
+                header("HTTP/1.1 401 Unauthorized");
             }
             //terminate script
             return false;

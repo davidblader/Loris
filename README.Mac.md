@@ -1,4 +1,4 @@
-#LORIS Mac Install Guide
+# LORIS Mac Install Guide
 ### Mac is no longer supported as of 15.10. 
 
 This is a guide on how to get a LORIS instance Running on your Mac computer. It is designed for installation in a sandbox environment. 
@@ -36,66 +36,7 @@ php -v
 
 Ensure that your php version is 5 or higher (5.x.x).  Note Loris is tested for php 5.3+
 
-## 1.3 PEAR 
-
-### 1.3.1 Check if PEAR is installed
-Check if you currently have PEAR installed:
-
-```
-pear version
-```
-If installed proceed to section 1.3.3 else continue.
-
-### 1.3.2 Installing PEAR
-
-To install PEAR do the following:
-
-```
-curl -O http://pear.php.net/go-pear.phar
-sudo php -d detect_unicode=0 go-pear.phar
-```
-### 1.3.3 Locate php.ini file
-
-To determine the location of the php.ini file use the following:
-
-```
-php --ini
-```
-The location of the ```php.ini``` will be listed under the ```Loaded Configuration File:```. If listed ```(none)``` use the following to initiate the file
-	
-```
-sudo cp /etc/php.ini.default /etc/php.ini
-```
-This command will initiate the file to the ```/etc``` directory
-
-### <a name="include_path"></a>1.3.4 Including PEAR
-
-For PEAR to work with LORIS it has to be included in the ```include_path``` in the ```php.ini```. To do so do the following:
-
-1.  Locate where PEAR installs .php files
-
-	```
-	pear config-get php_dir
-	```
-2. Check to see if the path from aboves output is included in the ```include_path```
-
-	```
-	php -c $pathToPhpIni -r 'echo get_include_path()."\n";'
-	```
-<i>$pathToPhpIni ⇾ path to ```php.ini``` refer to section 1.3.3</i>
-
-3. If not add the path to the ```include_path```
-
-	```
-	sudo vi $pathToPhpIni
-	```
-	<i>$pathToPhpIni ⇾ path to ```php.ini``` refer to 	section 1.3.3</i>
-
-	Locate the line containing ```include_path```. Ensure that you are adding the path to the UNIX instance of the ```include_path``` and that the line does not start with ```;```.
-	
-	Add the path to the end of the string using a ```:``` to seperate the path from the previous path.
-	
-## 1.4 Perl 
+## 1.3 Perl 
 
 Perl should be preinstalled on your Mac. To ensure type the following command into terminal 
 
@@ -103,9 +44,9 @@ Perl should be preinstalled on your Mac. To ensure type the following command in
 perl -v
 ```
 
-## 1.5 MySQL 
+## 1.4 MySQL 
 
-### 1.5.1 Check if MySQL is installed
+### 1.4.1 Check if MySQL is installed
 Check if you currently have MySQL installed:
 
 ```
@@ -113,16 +54,16 @@ mysql
 ```
 If already installed continue to section 1.6 else continue
 
-### 1.5.2 Obtaining MySQL
+### 1.4.2 Obtaining MySQL
 
 Download the latest DMG Archive for you current Mac setup (either 32-bit or 64-bit) from the following link [http://dev.mysql.com/downloads/mysql]
 (http://dev.mysql.com/downloads/mysql) and install the necessary files.
 
-### 1.5.3 Starting MySQL
+### 1.4.3 Starting MySQL
 
 Open System Preferences on your machine and select the MySQL icon. Start the MySQL server if it hasn’t already been started. Check Automatically Start MySQL Server on Startup if you dont want to have to repeat this step everytime you resart your computer.
 
-### 1.5.4 Setting up root user
+### 1.4.4 Setting up root user
 
 Access MySQL with the following
 
@@ -144,13 +85,13 @@ SET PASSWORD FOR 'root'@'localhost' = PASSWORD('$newpwd');
 ```
 <i>$newpwd ⇾ you new desired password for the root user</i>
 
-## 1.6 Smarty 3
+## 1.5 Smarty 3
 
-###1.6.1 Obtaining Smarty 3
+### 1.5.1 Obtaining Smarty 3
  
 Go to [http://www.smarty.net/download](http://www.smarty.net/download) and download the latest stable release of Smarty 3.x.x
 
-###1.6.2 Setting up Smarty 3
+### 1.5.2 Setting up Smarty 3
 
 Create the following directories if they do not already exist:
 
@@ -167,18 +108,18 @@ sudo mv /path/to/Smarty-3.x.x/libs/ /usr/local/lib/php/Smarty/smarty3
 
 After you have moved the directory ensure to add the path ```/usr/local/lib/php/Smarty``` to the ```include_path``` in the php.ini file (see [section 1.3.4](#include_path) part 3).
 
-#2. Installing LORIS Code Base
+# 2. Installing LORIS Code Base
 
 This section goes over how to obtain the LORIS code base and setup the database on your local machine.
 
-##2.1 Obtaining the LORIS code
+## 2.1 Obtaining the LORIS code
 
 Download the latest release from the [releases page](https://github.com/aces/Loris/releases) and
 extract it to `~/Sites/$projectname`
 
 <i>$projectname ⇾ “loris” or one-word project name</i>
 
-##2.2 Installing LORIS
+## 2.2 Installing LORIS
 
 Run installer script to install core code, libraries, and MySQL schema (see Loris Installation Schematic). 
 The script will prompt for information, including usernames and folders which it will create automatically.
@@ -190,7 +131,7 @@ cd ~/Sites/$projectname/tools
 The install script may not fully execute on Mac OS systems.  It is recommended to carefully review and execute manually the steps in the install.sh script on your system.  A few MySQL statement examples are provided in section 2.3. 
 Since the install script was created for LINUX OS, its apache2 setup steps won’t work. Section 3 describes how to set up the apache2 server for Mac.
 
-##2.3 Manually running install script steps
+## 2.3 Manually running install script steps
 
 Since you may not be able to fully execute the install.sh script at step 2.2, the following examples may help in manually executing the sequence of commands found in the install script.
 

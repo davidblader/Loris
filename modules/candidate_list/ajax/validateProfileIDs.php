@@ -13,15 +13,14 @@
  */
 
 $user =& User::singleton();
-$site =& Site::singleton($user->getData('CenterID'));
 if (!($user->hasPermission('access_all_profiles')
-    || ($site->isStudySite() && $user->hasPermission('data_entry')))
+    || ($user->hasStudySite() && $user->hasPermission('data_entry')))
 ) {
     header("HTTP/1.1 403 Forbidden");
     exit;
 }
 
-$found = Candidate::candidateExists($_GET['candID'], $_GET['PSCID']);
+$found = Candidate::candidateExists($_GET['CandID'], $_GET['PSCID']);
 
 if ($found) {
     echo 1;

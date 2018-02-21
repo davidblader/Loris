@@ -3,7 +3,7 @@
     {if $dynamictabs neq "dynamictabs"}
     <head>
         <link rel="stylesheet" href="{$baseurl}/{$css}" type="text/css" />
-        <link rel="shortcut icon" href="{$baseurl}/images/mni_icon.ico" type="image/ico" />
+        <link type="image/x-icon" rel="icon" href="/images/favicon.ico">
 
         {*
         This can't be loaded from getJSDependencies(), because it's needs access to smarty
@@ -11,7 +11,7 @@
            and can access them through the loris global (ie. loris.BaseURL) *}
         <script src="{$baseurl}/js/loris.js" type="text/javascript"></script>
         <script language="javascript" type="text/javascript">
-        var loris = new LorisHelper({$jsonParams}, {$userPerms|json_encode});
+        var loris = new LorisHelper({$jsonParams}, {$userPerms|json_encode}, {$studyParams|json_encode});
         </script>
         {section name=jsfile loop=$jsfiles}
             <script src="{$jsfiles[jsfile]}" type="text/javascript"></script>
@@ -38,17 +38,14 @@
                         breadcrumbs: crumbs,
                         baseURL: baseurl
                       });
-              React.render(breadcrumbs, document.getElementById("breadcrumbs"));
+              ReactDOM.render(breadcrumbs, document.getElementById("breadcrumbs"));
             {/if}
 
-            // If <input type="date/> is not supported (i.e. Firefox), load
-            // jquery date-picker
-            if (!Modernizr.inputtypes.date) {
-              $('input[type=date]').datepicker({
-                dateFormat: 'yy-mm-dd'
-              });
-            }
-
+            // Initialize bootstrap tooltip for site affiliations
+            $('#site-affiliations').tooltip({
+              html: true,
+              container: 'body'
+            });
           });
         </script>
         <link type="text/css" href="{$baseurl}/css/jqueryslidemenu.css" rel="Stylesheet" />
@@ -134,7 +131,7 @@
                     <ul class="nav navbar-nav navbar-right" id="nav-right">
                         {if $bvl_feedback}
                         <li class="hidden-xs hidden-sm">
-                            <a class="navbar-toggle" data-toggle="offcanvas" data-target=".navmenu" data-canvas="body">
+                            <a href="#" class="navbar-toggle" data-toggle="offcanvas" data-target=".navmenu" data-canvas="body">
                                 <span class="glyphicon glyphicon-edit"></span>
                             </a>
                         </li>
@@ -145,18 +142,23 @@
                                 <img width=17 src="{$baseurl}/images/help.gif">
                             </a>
                         </li>
-                        <li>
-                            <p class="navbar-text">
-                                &nbsp;&nbsp;  Site: {$user.Site} &nbsp;
-                            </p>
+                        <li class="nav">
+                            <a href="#"
+                               id="site-affiliations"
+                               data-toggle="tooltip"
+                               data-placement="bottom"
+                               title="{$user.SitesTooltip}">
+                                Site Affiliations: {$userNumSites}
+                            </a>
                         </li>
+
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding-right:25px;">
                                 {$user.Real_name|escape} <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="{$baseurl}/preferences/">
+                                    <a href="{$baseurl}/user_accounts/my_preferences/">
                                         My Preferences
                                     </a>
                                 </li>
@@ -239,7 +241,7 @@
                                     </a>.
                                 </p>
                                 <p>
-                                    <a href="javascript:history.back(-1)">
+                                    <a href="javascript:history.back()">
                                         Please click here to go back
                                     </a>.
                                 </p>
@@ -494,5 +496,35 @@
         {if $FormAction}
         </form>
         {/if}
+
+        <a id="login-modal-button" href="#" data-toggle="modal" data-target="#login-modal" style="display: none;">Login</a>
+
+        <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        Login to Your Account
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <font color="red" align="middle" id="login-modal-error" style="display: none;">
+                                    Incorrect username or password
+                                </font>
+                            </div>
+                            <div class="form-group col-xs-12">
+                                <input id="modal-username" name="username" class="form-control" type="text" value="" placeholder="User">
+                            </div>
+                            <div class="form-group col-xs-12">
+                                <input id="modal-password" name="password" class="form-control" type="password" placeholder="Password">
+                            </div>
+                            <div class="form-group col-xs-12">
+                                <input class="btn btn-primary col-xs-12" id="modal-login" name="login" type="submit" value="Login">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

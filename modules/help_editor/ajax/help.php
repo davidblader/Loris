@@ -1,7 +1,7 @@
 <?php
 /**
  * This file retrieves content for specific help section
- * and returns a json object 
+ * and returns a json object
  *
  * PHP Version 5
  *
@@ -9,45 +9,51 @@
  * @package  Loris
  * @author   Rathi Sekaran <sekaranrathi@gmail.com>
  * @license  Loris license
- * @link     https://www.github.com/aces/Loris-Trunk/
+ * @link     https://github.com/aces/Loris
  */
 
-set_include_path(get_include_path().":../project/libraries:../php/libraries:");
-ini_set('default_charset', 'utf-8');
-
-ob_start('ob_gzhandler');
-require_once "NDB_Client.class.inc";
-$client = new NDB_Client();
-$client->initialize();
-
-require_once "HelpFile.class.inc";
-
-// create DB object
-$DB =& Database::singleton();
-
-// store some request information
-if (!empty($_REQUEST['helpID'])) {
-    $helpID = $_REQUEST['helpID'];
-} else {
-    if (!empty($_REQUEST['test_name'])) {
-        $helpID = HelpFile::hashToID(md5($_REQUEST['test_name']));
-
+try {
+    /**
+     * The link constructed from the front end sets the testName
+     * parameter, not the Module parameter.
+     */
+    if (isset($_REQUEST['testName'])) {
+        $mname = $_REQUEST['testName'];
     }
-    if (!empty($_REQUEST['test_name']) && !empty($_REQUEST['subtest']) ) {
-        $helpID = HelpFile::hashToID(md5($_REQUEST['subtest']));
+
+    $m = Module::factory($mname);
+} catch (Exception $e) {
+    $m = '';
+}
+if (!empty($m)) {
+    $page            = !empty($_REQUEST['subtest']) ? $_REQUEST['subtest'] : $mname;
+    $help['content'] = $m->getHelp($page);
+    $help['format']  = 'markdown';
+    print json_encode($help);
+    ob_end_flush();
+    exit(0);
+}
+
+// Wasn't a module, so fall back on the old style of DB lookup.
+require_once "helpfile.class.inc";
+
+if (!empty($_REQUEST['testName'])) {
+    if (empty($_REQUEST['subtest'])) {
+        $helpID = \LORIS\help_editor\HelpFile::hashToID(md5($_REQUEST['testName']));
+    } else {
+        $helpID = \LORIS\help_editor\HelpFile::hashToID(md5($_REQUEST['subtest']));
     }
 }
-$help_file       = HelpFile::factory($helpID);
+
+$help_file       = \LORIS\help_editor\HelpFile::factory($helpID);
 $data            = $help_file->toArray();
-$data['content'] = utf8_encode(trim($data['content']));
-if (empty($data['content'])) {
-    $data['content'] = 'Under Construction';
-}
-if (empty($data['updated']) ) {
+$data['content'] = trim($data['content']);
+
+if (empty($data['updated'])) {
     $data['updated'] = "-";
-    // if document was never updated should display date created  
+    // if document was never updated should display date created
     if (!empty($data['created'])) {
-        $data['updated'] = $data['created']; 
+        $data['updated'] = $data['created'];
     }
 }
 print json_encode($data);
