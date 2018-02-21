@@ -18,9 +18,8 @@
    <div class="panel-body">
       {section name=file loop=$files}
           <div id="image-{$files[file].FileID}"></div>
-
           <script>
-          React.render(
+          ReactDOM.render(
                   RImagePanel({
                       'BaseURL' : "{$baseurl}",
 
@@ -32,7 +31,6 @@
                       'HasQCPerm': {if $has_qc_permission}true{else}false{/if},
                       'FileNew'  : {if $files[file].New}true{else}false{/if},
                       "Selected" : "{if $files[file].Selected}{$files[file].Selected}{/if}",
-                      "SelectedOptions" : {$selected_options|json_encode},
 
                       "Caveat" : "{$files[file].Caveat}",
                       "SNR" : "{if $files[file].SNR}{$files[file].SNR}{/if}",
@@ -47,6 +45,7 @@
                           "AcquisitionProtocol" : "{$files[file].AcquisitionProtocol}",
                           "SeriesDescription" : "{$files[file].SeriesDescription}",
                           "SeriesNumber" : "{$files[file].SeriesNumber}",
+                          "SeriesUID" : "{$files[file].SeriesUID}",
                           "EchoTime" : "{$files[file].EchoTime}",
                           "RepetitionTime" : "{$files[file].RepetitionTime}",
                           "SliceThickness" : "{$files[file].SliceThickness}",
@@ -63,7 +62,8 @@
                       "XMLProtocol" : "{$files[file].XMLprotocol}",
                       "XMLReport" : "{$files[file].XMLreport}",
                       "NrrdFile" : "{$files[file].NrrdFile}",
-                      "OtherTimepoints" : "{$files[file].OtherTimepoints}"
+                      "OtherTimepoints" : "{$files[file].OtherTimepoints}",
+                      "SeriesUID": "{$files[file].SeriesUID}"
                   }),
                   document.getElementById("image-{$files[file].FileID}" )
                   );

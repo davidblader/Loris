@@ -76,8 +76,10 @@ class GenomicBrowserTestIntegrationTest extends LorisIntegrationTest
                 'SNP_Name',
                 'SNP_Description',
                 'SNP_External_Source',
-                'Observed_Base',
+                'Allele_A',
+                'Allele_B',
                 'Reference_Base',
+                'Minor_Allele',
                 'Array_Report',
                 'Markers',
                 'Validation_Method',
@@ -308,14 +310,14 @@ class GenomicBrowserTestIntegrationTest extends LorisIntegrationTest
         $this->DB->delete("CNV", array("CNVID" => '9999999997'));
         $this->DB->delete("CNV", array("CNVID" => '9999999996'));
         $this->DB->delete("CNV", array("CNVID" => '9999999995'));
+        $this->DB->delete("SNP_candidate_rel", array("SNPID" => '9999999999'));
+        $this->DB->delete("SNP_candidate_rel", array("SNPID" => '9999999998'));
+        $this->DB->delete("SNP_candidate_rel", array("SNPID" => '9999999997'));
         $this->DB->delete("SNP", array("SNPID" => '9999999999'));
         $this->DB->delete("SNP", array("SNPID" => '9999999998'));
         $this->DB->delete("SNP", array("SNPID" => '9999999997'));
         $this->DB->delete("SNP", array("SNPID" => '9999999996'));
         $this->DB->delete("SNP", array("SNPID" => '9999999995'));
-        $this->DB->delete("SNP_candidate_rel", array("SNPID" => '9999999999'));
-        $this->DB->delete("SNP_candidate_rel", array("SNPID" => '9999999998'));
-        $this->DB->delete("SNP_candidate_rel", array("SNPID" => '9999999997'));
         $this->DB->delete("candidate", array('CandID' => '000771'));
         $this->DB->delete("candidate", array('CandID' => '000772'));
         $this->DB->delete("psc", array('CenterID' => 92));
@@ -609,7 +611,7 @@ class GenomicBrowserTestIntegrationTest extends LorisIntegrationTest
             'Test should be updated for new main genomic browser tab.'
         );
 
-        $this->safeGet($this->url . "/genomic_browser/?submenu=cnv_browser");
+        $this->safeGet($this->url . "/genomic_browser/cnv_browser/");
 
         $tabText = $this->webDriver->findElement(
             WebDriverBy::xPath(
@@ -635,7 +637,7 @@ class GenomicBrowserTestIntegrationTest extends LorisIntegrationTest
     function testGenomicBrowserCNVEmptyDatatable()
     {
         $this->deleteData();
-        $this->safeGet($this->url . "/genomic_browser/?submenu=cnv_browser");
+        $this->safeGet($this->url . "/genomic_browser/cnv_browser/");
 
         $message = $this->webDriver->findElement(
             WebDriverBy::id("LogEntries")
@@ -664,7 +666,7 @@ class GenomicBrowserTestIntegrationTest extends LorisIntegrationTest
      */
     function testGenomicBrowserCNVDatatable()
     {
-        $this->safeGet($this->url . "/genomic_browser/?submenu=cnv_browser");
+        $this->safeGet($this->url . "/genomic_browser/cnv_browser/");
 
         $message = $this->webDriver->findElement(
             WebDriverBy::id("LogEntries")
@@ -709,7 +711,7 @@ class GenomicBrowserTestIntegrationTest extends LorisIntegrationTest
                              'Common CNV',
                             );
 
-        $this->safeGet($this->url . "/genomic_browser/?submenu=cnv_browser");
+        $this->safeGet($this->url . "/genomic_browser/cnv_browser/");
 
         $headers = $this->webDriver->findElements(
             WebDriverBy::xPath(
@@ -760,7 +762,7 @@ class GenomicBrowserTestIntegrationTest extends LorisIntegrationTest
     function testGenomicBrowserCNVSitePermission()
     {
         $this->setupPermissions(array('genomic_browser_view_site'));
-        $this->safeGet($this->url . "/genomic_browser/?submenu=cnv_browser");
+        $this->safeGet($this->url . "/genomic_browser/cnv_browser/");
 
         $message = $this->webDriver->findElement(
             WebDriverBy::id("LogEntries")
@@ -780,7 +782,7 @@ class GenomicBrowserTestIntegrationTest extends LorisIntegrationTest
     function testGenomicBrowserCNVFilters()
     {
 
-        $this->safeGet($this->url . "/genomic_browser/?submenu=cnv_browser");
+        $this->safeGet($this->url . "/genomic_browser/cnv_browser/");
         $filters = $this->_getCNVFilters();
 
         foreach ($filters as $filter) {
@@ -840,7 +842,7 @@ class GenomicBrowserTestIntegrationTest extends LorisIntegrationTest
                              'Validation Method',
                             );
 
-        $this->safeGet($this->url . "/genomic_browser/?submenu=cnv_browser");
+        $this->safeGet($this->url . "/genomic_browser/cnv_browser/");
 
         // Apply filter
         $this->webDriver->findElement(
@@ -858,7 +860,7 @@ class GenomicBrowserTestIntegrationTest extends LorisIntegrationTest
         $this->clickToLoadNewPage($button);
 
         // Check column count
-        $this->safeGet($this->url . "/genomic_browser/?submenu=cnv_browser");
+        $this->safeGet($this->url . "/genomic_browser/cnv_browser/");
         $headers = $this->webDriver->findElements(
             WebDriverBy::xPath(
                 "
@@ -889,7 +891,7 @@ class GenomicBrowserTestIntegrationTest extends LorisIntegrationTest
      */
     function testGenomicBrowserSNPBrowserDoespageLoad()
     {
-        $this->safeGet($this->url . "/genomic_browser/?submenu=snp_browser");
+        $this->safeGet($this->url . "/genomic_browser/snp_browser/");
 
         $tabText = $this->webDriver->findElement(
             WebDriverBy::xPath(
@@ -915,7 +917,7 @@ class GenomicBrowserTestIntegrationTest extends LorisIntegrationTest
     function testGenomicBrowserSNPEmptyDatatable()
     {
         $this->deleteData();
-        $this->safeGet($this->url . "/genomic_browser/?submenu=snp_browser");
+        $this->safeGet($this->url . "/genomic_browser/snp_browser/");
 
         $message = $this->webDriver->findElement(
             WebDriverBy::id("LogEntries")
@@ -944,7 +946,7 @@ class GenomicBrowserTestIntegrationTest extends LorisIntegrationTest
      */
     function testGenomicBrowserSNPDatatable()
     {
-        $this->safeGet($this->url . "/genomic_browser/?submenu=snp_browser");
+        $this->safeGet($this->url . "/genomic_browser/snp_browser/");
 
         $message = $this->webDriver->findElement(
             WebDriverBy::id("LogEntries")
@@ -974,7 +976,7 @@ class GenomicBrowserTestIntegrationTest extends LorisIntegrationTest
     function testGenomicBrowserSNPSitePermission()
     {
         $this->setupPermissions(array('genomic_browser_view_site'));
-        $this->safeGet($this->url . "/genomic_browser/?submenu=snp_browser");
+        $this->safeGet($this->url . "/genomic_browser/snp_browser/");
 
         $message = $this->webDriver->findElement(
             WebDriverBy::id("LogEntries")
@@ -1008,7 +1010,7 @@ class GenomicBrowserTestIntegrationTest extends LorisIntegrationTest
                              'Function Prediction',
                             );
 
-        $this->safeGet($this->url . "/genomic_browser/?submenu=snp_browser");
+        $this->safeGet($this->url . "/genomic_browser/snp_browser/");
         $headers = $this->webDriver->findElements(
             WebDriverBy::xPath(
                 "
@@ -1055,7 +1057,7 @@ class GenomicBrowserTestIntegrationTest extends LorisIntegrationTest
     function testGenomicBrowserSNPFilters()
     {
 
-        $this->safeGet($this->url . "/genomic_browser/?submenu=snp_browser");
+        $this->safeGet($this->url . "/genomic_browser/snp_browser/");
         $filters = $this->_getSNPFilters();
 
         foreach ($filters as $filter) {
@@ -1104,8 +1106,10 @@ class GenomicBrowserTestIntegrationTest extends LorisIntegrationTest
                              'SNP Name',
                              'SNP Description',
                              'External Source',
-                             'Observed Base',
+                             'Minor Allele',
                              'Reference Base',
+                             'Allele A',
+                             'Allele B',
                              'Array Report',
                              'Markers',
                              'Validation Method',
@@ -1134,7 +1138,7 @@ class GenomicBrowserTestIntegrationTest extends LorisIntegrationTest
         $this->clickToLoadNewPage($button);
 
         // Check column count
-        $this->safeGet($this->url . "/genomic_browser/?submenu=snp_browser");
+        $this->safeGet($this->url . "/genomic_browser/snp_browser/");
         $headers = $this->webDriver->findElements(
             WebDriverBy::xPath(
                 "

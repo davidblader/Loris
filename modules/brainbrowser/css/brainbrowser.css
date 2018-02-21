@@ -27,22 +27,12 @@ body {
 
 .brainbrowser .panel-default {
   width: auto;
-  min-width: 330px;
+  min-width: 300px;
   border: 1px solid #ccc;
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
-}
-
-#sync-volumes-wrapper {
-  margin-right: 10px;
-}
-
-#capture-slices, #sync-volumes {
-  font-size: 12px;
-  margin: 0;
-  line-height: 2;
 }
 
 .volume-container {
@@ -56,6 +46,7 @@ body {
   max-height: 660px;
   min-width: 300px;
 }
+
 
 .control-heading {
   font-weight: normal !important;
@@ -154,20 +145,17 @@ body {
 
 .play-btn:focus { outline: 0; }
 
-.panel-size {
-  color: #fff;
-  background-color: #064785;
-  border-color: #053a6d;
-  font-weight: bold;
-}
-
 .overlay-viewer-display {
   float: right;
 }
 
 .volume-viewer-display {
-  float: right;
-  max-width: 100%;
+  text-align: right;
+  width: 100%;
+}
+
+.volume-viewer-controls .coords {
+  max-width: 270px;
 }
 
 .loading-message {
@@ -180,3 +168,27 @@ body {
   text-transform: uppercase;
 }
 
+.brainbrowser-wrapper .global-controls .control {
+  color: #fff;
+  background-color: #064785;
+  border: 1px solid #053a6d;
+  font-weight: 500;
+  height: 35px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin-right: 10px;
+  outline: 0 !important;
+}
+
+.brainbrowser-wrapper .global-controls .control:active,
+.brainbrowser-wrapper .global-controls .control.isChecked {
+  background-color: #042d54;
+}
+
+@media(min-width: 768px) {
+  .brainbrowser-template .control-panel {
+    max-width: 300px;
+    float: left;
+    margin: 0 10px 0 0;
+  }
+}
