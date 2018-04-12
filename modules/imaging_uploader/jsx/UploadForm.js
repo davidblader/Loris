@@ -1,5 +1,4 @@
 import ProgressBar from 'ProgressBar';
-
 /**
  * Imaging Upload Form
  *
@@ -31,6 +30,7 @@ class UploadForm extends React.Component {
     this.onFormChange = this.onFormChange.bind(this);
     this.submitForm = this.submitForm.bind(this);
     this.uploadFile = this.uploadFile.bind(this);
+    this.testDICOMEntries = this.testDICOMEntries.bind(this);
   }
 
   componentDidMount() {
@@ -38,12 +38,38 @@ class UploadForm extends React.Component {
     this.onFormChange(this.state.form.IsPhantom.name, null);
   }
 
+  testDICOMEntries(byteArray) {
+    try {
+      dicomParser.parseDicom(byteArray);
+    } catch(e) {
+      console.warn(e);
+    }
+  }
+
   onFormChange(field, value) {
     if (!field) return;
 
     const form = JSON.parse(JSON.stringify(this.state.form));
     const formData = Object.assign({}, this.state.formData);
-
+    if (field === 'mri_file') {
+      console.log(value);
+      //console.log(typeof value);
+      //let zip = new JSZip();
+      /*let fr = new FileReader();
+      fr.readAsArrayBuffer(value);*/
+      //console.log(fr.result);
+      JSZip.loadAsync(value)
+        .then(function(zip) {
+          //console.log(zip);
+          zip.forEach(function(relPath, entry) {
+            console.log(entry);
+            this.testDICOMEntries(entry._data.compressedContent);
+            //let f  = new File(entry._data.compressedContent, entry.name);
+            //console.log(f);
+            //console.log(entry);
+          }.bind(this))
+      }.bind(this));
+    }
     if (field === 'IsPhantom') {
       if (value === 'N') {
         form.candID.disabled = false;

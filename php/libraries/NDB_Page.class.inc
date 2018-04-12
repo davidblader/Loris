@@ -695,6 +695,8 @@ class NDB_Page
                   $baseurl . "/js/util/queryString.js",
                   $baseurl . '/js/components/Form.js',
                   $baseurl . '/js/components/Markdown.js',
+                  $baseurl . '/vendor/jszip/jszip' . $min .'.js',
+                  $baseurl . '/vendor/dicom-parser/dicomParser' . $min . '.js',
                  );
         return $files;
     }
