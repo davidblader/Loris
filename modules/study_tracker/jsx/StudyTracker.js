@@ -1218,54 +1218,54 @@ class StudyTracker extends React.Component {
 
 // Returns an object which contains a clean status and styled html to display
 function prettyStatus(status, dueDate) {
-  let html, toReturn;
+  let html;
+  let toReturn;
 
   toReturn = {
-    "status": "",
-    "html": "",
-    "daysLeft": null
+    status: "",
+    html: "",
+    daysLeft: null
   };
 
   if (!status) return toReturn;
 
-  if (~status.indexOf("complete")) {
+  if (status.indexOf("complete") > -1) {
     html = <span className="complete right-align">complete</span>;
     toReturn = {
-      "status": "complete",
-      "html": html
+      status: "complete",
+      html: html
     };
-  } else if (~status.indexOf("deadline-approaching")) {
+  } else if (status.indexOf("deadline-approaching") > -1) {
     let daysLeft = Math.ceil((new Date(dueDate) - new Date()) * MS_TO_DAYS);
-    let strDaysLeft = daysLeft + "";
-    strDaysLeft += daysLeft == 1 ? " day" : " days";
+    let strDaysLeft = String(daysLeft);
+    strDaysLeft += daysLeft === 1 ? " day" : " days";
     html = <span className="deadline-approaching right-align">due in {strDaysLeft}</span>;
     toReturn = {
-      "status": "deadline-approaching",
-      "html": html,
-      "daysLeft": daysLeft
+      status: "deadline-approaching",
+      html: html,
+      daysLeft: daysLeft
     };
-  } else if (~status.indexOf("deadline-past")) {
+  } else if (status.indexOf("deadline-past") > -1) {
     let daysPast = Math.ceil((new Date() - new Date(dueDate)) * MS_TO_DAYS);
-    let strDaysPast = daysPast + "";
-    strDaysPast += daysPast == 1 ? " day" : " days";
+    let strDaysPast = String(daysPast);
+    strDaysPast += daysPast === 1 ? " day" : " days";
     html = <span className="deadline-past right-align">{strDaysPast} late</span>;
     toReturn = {
-      "status": "deadline-past",
-      "html": html,
-      "daysLeft": -daysPast
+      status: "deadline-past",
+      html: html,
+      daysLeft: -daysPast
     };
-  } else if (~status.indexOf("cancelled")) {
+  } else if (status.indexOf("cancelled") > -1) {
     html = <span className="cancelled right-align">visit cancelled</span>;
     toReturn = {
-      "status": "cancelled",
-      "html": html
+      status: "cancelled",
+      html: html
     };
-
-  } else if (~status.indexOf("no-deadline")) {
+  } else if (status.indexOf("no-deadline") > -1) {
     html = <span className="no-deadline right-align">no deadline specified</span>;
     toReturn = {
-      "status": "no-deadline",
-      "html": html
+      status: "no-deadline",
+      html: html
     };
   }
 
@@ -1290,23 +1290,21 @@ function formatDate(date) {
 function openBVLFeedback(candID, sessionID, commentID, testName) {
   let url = loris.BaseURL + "/";
   if (candID && sessionID && commentID && testName) {
-    url += testName
-      + "/?commentID=" + commentID
-      + "&sessionID=" + sessionID
-      + "&candID=" + candID;
-  }
-  else if (candID && sessionID) {
+    url += testName +
+      "/?commentID=" + commentID +
+      "&sessionID=" + sessionID +
+      "&candID=" + candID;
+  } else if (candID && sessionID) {
     url += "instrument_list/?candID=" + candID + "&sessionID=" + sessionID;
-  }
-  else if (candID) {
+  } else if (candID) {
     url += candID;
   } else {
     return;
   }
   let win = window.open(url, "_blank");
-  win.onload = function () {
+  win.onload = function() {
     win.document.querySelector("a.navbar-toggle").dispatchEvent(new MouseEvent("click"));
-  }
+  };
 }
 
 function openConflictResolver(candID, testName, e) {

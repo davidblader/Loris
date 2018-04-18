@@ -51,7 +51,7 @@ var config = [{
     './modules/data_integrity_flag/js/index.js': './modules/data_integrity_flag/jsx/index.js',
     './modules/imaging_uploader/js/index.js': './modules/imaging_uploader/jsx/index.js',
     './modules/acknowledgements/js/columnFormatter.js': './modules/acknowledgements/jsx/columnFormatter.js',
-    './modules/study_tracker/js/index.js' : './modules/study_tracker/jsx/index.js'
+    './modules/study_tracker/js/index.js': './modules/study_tracker/jsx/index.js'
   },
   output: {
     path: './',
