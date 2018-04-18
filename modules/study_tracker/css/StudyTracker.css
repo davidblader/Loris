@@ -209,8 +209,12 @@ table.study-tracker-table {
     margin-bottom: 30px;
 }
 
-.SideBarInstStatus {
-    width: 30px;
+.SideBarInstLink {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: block;
+    width: auto;
 }
 
 .inner-circle-glyph {
