@@ -13,10 +13,12 @@
  */
 
 $DB = \Database::singleton();
+$config = \NDB_Config::singleton();
+
+const DATA_ENTRY_DAYS = $config->getSetting('study_tracker_data_entry_deadline');
+const VISIT_REG_DAYS  = $config->getSetting('study_tracker_visit_deadline');
 
 // ================================ CCNA SPECIFIC ================================
-const DATA_ENTRY_DAYS = 14;
-const VISIT_REG_DAYS  = 90;
 const VISIT_ORDER = array(
     'Initial_Assessment_Screening' => 0,
     'Clinical_Assessment' => 1,
@@ -268,6 +270,7 @@ function getTableData()
 
         // ================================ CCNA SPECIFIC ================================
         $screeningDone = isset($row['visits'][0]) && $row['visits'][0]['currentStage'] !== 'Not Started';
+        // $initialDateComplete = figureOutHowToDoThis();
         // ================================ CCNA SPECIFIC END ============================
 
         $candidateInactive = $row['statusDesc'] !== 'Active' && $row['statusDesc'] !== 'Complete';
@@ -589,5 +592,3 @@ function getInstruments($sessionID)
     }
     return $result;
 }
-
-?>
