@@ -52,19 +52,21 @@ class UploadForm extends React.Component {
     }
 
     if (field === 'mriFile' && formData.IsPhantom === 'N') {
-        // get PSCID and CandID by splitting on underscore
-        let fields = value.name.split('_', 2);
-        let length = fields[0].length + fields[1].length + 1;
-        let tail = value.name.slice(length).replace(/\.((zip)|(tar\.gz)|(tgz))$/, '');
-        console.log(tail);
-        formData.pSCID = fields[0];
-        formData.candID = fields[1];
-        formData.visitLabel = Object.keys(this.props.form.visitLabel.options).find(
-            function(o) {
-                let regex = new RegExp('^_' + o + '_?');
-                return regex.test(tail);
-            }
-        );
+      // get PSCID and CandID by splitting on underscore
+      let fields = value.name.split('_', 2);
+      // +1 to account for underscore
+      let length = fields[0].length + fields[1].length + 1;
+      // separate file extensions from remainder of filename
+      let tail = value.name.slice(length).replace(/\.((zip)|(tar\.gz)|(tgz))$/, '');
+
+      formData.pSCID = fields[0];
+      formData.candID = fields[1];
+      formData.visitLabel = Object.keys(this.props.form.visitLabel.options).find(
+          function(o) {
+              let regex = new RegExp('^_(' + o + ')_?');
+              return regex.test(tail);
+          }
+      );
     }
 
     formData[field] = value;
@@ -365,9 +367,10 @@ class UploadForm extends React.Component {
                 errorMessage={this.state.errorMessage.mriFile}
                 value={this.state.formData.mriFile}
             />
-            <TextboxElement
+            <SelectElement
                 name="pSCID"
                 label="PSCID"
+                options={this.props.form.pSCID.options}
                 onUserInput={this.onFormChange}
                 disabled={this.getDisabledStatus(this.state.formData.IsPhantom)}
                 required={!this.getDisabledStatus(this.state.formData.IsPhantom)}
@@ -375,9 +378,10 @@ class UploadForm extends React.Component {
                 errorMessage={this.state.errorMessage.pSCID}
                 value={this.state.formData.pSCID}
             />
-            <TextboxElement
+            <SelectElement
               name="candID"
               label="CandID"
+              options={this.props.form.candID.options}
               onUserInput={this.onFormChange}
               disabled={this.getDisabledStatus(this.state.formData.IsPhantom)}
               required={!this.getDisabledStatus(this.state.formData.IsPhantom)}

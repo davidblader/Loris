@@ -108,11 +108,22 @@ class Imaging_Uploader extends \NDB_Menu_Filter_Form
                           'N' => 'No',
                           'Y' => 'Yes',
                          ];
+        $db  = \Database::singleton();
+        $ids = $db->pselect(
+          'SELECT CandID, PSCID FROM candidate',
+            array()
+        );
+
+        $pscids  = array_column($ids, 'PSCID');
+        $pscids  = array_combine($pscids, $pscids);
+        $candids = array_column($ids, 'CandID');
+        $candids = array_combine($candids, $candids);
         $visitlabels   = \Utility::getExistingVisitLabels();
+
         // Fields used for selection filter and upload form
         $this->addSelect('IsPhantom', 'Phantom Scans', $phantomOtions);
-        $this->addBasicText('candID', 'CandID');
-        $this->addBasicText('pSCID', 'PSCID');
+        $this->addSelect('candID', 'CandID', $candids);
+        $this->addSelect('pSCID', 'PSCID', $pscids);
         $this->addSelect('visitLabel', 'Visit Label', $visitlabels);
         $this->addFile('mriFile', 'File to Upload');
         ///////////////////////////////////////////////////////////////////////
@@ -346,8 +357,8 @@ class Imaging_Uploader extends \NDB_Menu_Filter_Form
             ///////////////////////////////////////////////////////////////////////
             $pcv  = $pscid . "_" . $candid . "_" . $visit_label;
             $pcvu = $pcv . "_";
-            if ((!preg_match("/^{$pcv}\.(zip|tgz|tar.gz)/", $file_name))
-                && (!preg_match("/^{$pcvu}.*(\.(zip|tgz|tar.gz))/", $file_name))
+            if ((!preg_match("/^{$pcv}\.(zip|tgz|tar\.gz)/", $file_name))
+                && (!preg_match("/^{$pcvu}.*(\.(zip|tgz|tar\.gz))/", $file_name))
             ) {
                      $file_name_error
                          = "File name and fields entered in CandID, PSCID," .
