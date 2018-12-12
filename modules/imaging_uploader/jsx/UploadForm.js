@@ -16,11 +16,8 @@ class UploadForm extends React.Component {
   constructor(props) {
     super(props);
 
-    const form = JSON.parse(JSON.stringify(this.props.form));
-
     this.state = {
       formData: {},
-      form: form,
       hasError: {},
       errorMessage: {},
       uploadProgress: -1
@@ -34,7 +31,7 @@ class UploadForm extends React.Component {
 
   componentDidMount() {
     // Disable fields on initial load
-    this.onFormChange(this.state.form.IsPhantom.name, null);
+    this.onFormChange('IsPhantom', null);
   }
 
   /*
@@ -44,7 +41,6 @@ class UploadForm extends React.Component {
   onFormChange(field, value) {
     if (!field) return;
 
-    const form = JSON.parse(JSON.stringify(this.state.form));
     const formData = Object.assign({}, this.state.formData);
 
     if (field === 'IsPhantom') {
@@ -55,10 +51,25 @@ class UploadForm extends React.Component {
       }
     }
 
+    if (field === 'mriFile' && formData.IsPhantom === 'N') {
+        // get PSCID and CandID by splitting on underscore
+        let fields = value.name.split('_', 2);
+        let length = fields[0].length + fields[1].length + 1;
+        let tail = value.name.slice(length).replace(/\.((zip)|(tar\.gz)|(tgz))$/, '');
+        console.log(tail);
+        formData.pSCID = fields[0];
+        formData.candID = fields[1];
+        formData.visitLabel = Object.keys(this.props.form.visitLabel.options).find(
+            function(o) {
+                let regex = new RegExp('^_' + o + '_?');
+                return regex.test(tail);
+            }
+        );
+    }
+
     formData[field] = value;
 
     this.setState({
-      form: form,
       formData: formData
     });
   }
@@ -304,14 +315,6 @@ class UploadForm extends React.Component {
   }
 
   render() {
-    // Bind form elements to formData
-    const form = this.state.form;
-    form.IsPhantom.value = this.state.formData.IsPhantom;
-    form.candID.value = this.state.formData.candID;
-    form.pSCID.value = this.state.formData.pSCID;
-    form.visitLabel.value = this.state.formData.visitLabel;
-    form.mriFile.value = this.state.formData.mriFile;
-
     // Hide button when progress bar is shown
     const btnClass = (
       (this.state.uploadProgress > -1) ? "btn btn-primary hide" : undefined
@@ -353,6 +356,25 @@ class UploadForm extends React.Component {
               errorMessage={this.state.errorMessage.IsPhantom}
               value={this.state.formData.IsPhantom}
             />
+            <FileElement
+                name="mriFile"
+                label="File to Upload"
+                onUserInput={this.onFormChange}
+                required={true}
+                hasError={this.state.hasError.mriFile}
+                errorMessage={this.state.errorMessage.mriFile}
+                value={this.state.formData.mriFile}
+            />
+            <TextboxElement
+                name="pSCID"
+                label="PSCID"
+                onUserInput={this.onFormChange}
+                disabled={this.getDisabledStatus(this.state.formData.IsPhantom)}
+                required={!this.getDisabledStatus(this.state.formData.IsPhantom)}
+                hasError={this.state.hasError.pSCID}
+                errorMessage={this.state.errorMessage.pSCID}
+                value={this.state.formData.pSCID}
+            />
             <TextboxElement
               name="candID"
               label="CandID"
@@ -362,16 +384,6 @@ class UploadForm extends React.Component {
               hasError={this.state.hasError.candID}
               errorMessage={this.state.errorMessage.candID}
               value={this.state.formData.candID}
-            />
-            <TextboxElement
-              name="pSCID"
-              label="PSCID"
-              onUserInput={this.onFormChange}
-              disabled={this.getDisabledStatus(this.state.formData.IsPhantom)}
-              required={!this.getDisabledStatus(this.state.formData.IsPhantom)}
-              hasError={this.state.hasError.pSCID}
-              errorMessage={this.state.errorMessage.pSCID}
-              value={this.state.formData.pSCID}
             />
             <SelectElement
               name="visitLabel"
@@ -384,15 +396,7 @@ class UploadForm extends React.Component {
               errorMessage={this.state.errorMessage.visitLabel}
               value={this.state.formData.visitLabel}
             />
-            <FileElement
-              name="mriFile"
-              label="File to Upload"
-              onUserInput={this.onFormChange}
-              required={true}
-              hasError={this.state.hasError.mriFile}
-              errorMessage={this.state.errorMessage.mriFile}
-              value={this.state.formData.mriFile}
-            />
+
             <StaticElement
               label="Notes"
               text={notes}
